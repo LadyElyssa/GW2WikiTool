@@ -1,5 +1,5 @@
-# GW2WikiTool
-
+## GW2WikiTool
+* Requires .net 8.0 runtime available here: [https://dotnet.microsoft.com/en-us/download/dotnet/8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 * Provides Wiki Style coordinates for a character location in game.
 * Cached and Searchable Achievement ID's.
 * Cached and Searchable Waypoint Chat Code
