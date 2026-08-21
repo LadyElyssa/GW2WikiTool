@@ -5,5 +5,7 @@
 * Cached and Searchable Waypoint Chat Code
 * The Waypoint Search just needs the name of the Waypoint, the term Waypoint is not needed.
 
-<img width="980" height="396" alt="image" src="https://github.com/user-attachments/assets/71128ba4-824b-4aa4-8aa7-f513a0626e64" />
+<img width="693" height="392" alt="image" src="https://github.com/user-attachments/assets/ec9a5ab5-7332-4711-92fb-c25618af123c" />
+
+
 
