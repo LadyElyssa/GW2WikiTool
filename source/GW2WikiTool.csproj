@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>GW2WikiTool</AssemblyName>
+    <RootNamespace>GW2WikiTool</RootNamespace>
+	
+	<Title>GW2 Wiki Tool</Title>
+    <Authors>Lady Elyssa</Authors>
+
+    <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
+	
+	<!-- Executable Icon -->
+    <ApplicationIcon>GW2WikiTool.ico</ApplicationIcon>
+
+    <!-- Single-file properties -->
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+
+  </PropertyGroup>
+
+</Project>
