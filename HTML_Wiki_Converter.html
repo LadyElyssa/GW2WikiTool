@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GW2 Wiki → In-Game Coordinate Converter</title>
+<style>
+  body { font-family: -apple-system, Segoe UI, Roboto, sans-serif; max-width: 640px; margin: 40px auto; padding: 0 20px; color: #222; }
+  h1 { font-size: 1.4em; }
+  h2 { font-size: 1.05em; margin-top: 28px; }
+  fieldset { border: 1px solid #ccc; border-radius: 8px; padding: 14px 18px; margin-bottom: 18px; }
+  legend { font-weight: 600; padding: 0 6px; }
+  label { display: block; font-size: 0.85em; color: #555; margin-top: 8px; }
+  input { width: 100%; padding: 6px 8px; margin-top: 2px; box-sizing: border-box; font-size: 0.95em; }
+  .row { display: flex; gap: 12px; }
+  .row > div { flex: 1; }
+  button { margin-top: 16px; padding: 10px 18px; font-size: 1em; border-radius: 6px; border: none; background: #444; color: #fff; cursor: pointer; }
+  button:hover { background: #222; }
+  .result { margin-top: 16px; padding: 14px; background: #f4f4f4; border-radius: 8px; font-size: 1.05em; font-family: monospace; white-space: pre-wrap; }
+  .hint { font-size: 0.8em; color: #777; margin-top: 4px; }
+  a { color: #2a6fb0; }
+</style>
+</head>
+<body>
+
+<h1>GW2 Wiki Coordinate → In-Game Coordinate Converter</h1>
+<p>Converts a wiki/world-map ("continent") coordinate pair back into raw in-game coordinates, using a map's <code>map_rect</code> and <code>continent_rect</code> from the GW2 API.</p>
+
+<h2>1. Map rectangles</h2>
+<p class="hint">Look these up for your map via <a href="https://api.guildwars2.com/v2/continents/1/floors?ids=1" target="_blank">api.guildwars2.com/v2/continents/1/floors?ids=1</a> (continent 1 = Tyria, floor 1; use floor 2 for the End of Dragons–expanded areas). Find your map by name and copy its <code>map_rect</code> and <code>continent_rect</code> arrays.</p>
+
+<fieldset>
+  <legend>map_rect  [[minX, minY], [maxX, maxY]]</legend>
+  <div class="row">
+    <div><label>minX</label><input id="mrMinX" type="number" value="-43008"></div>
+    <div><label>minY</label><input id="mrMinY" type="number" value="-27648"></div>
+  </div>
+  <div class="row">
+    <div><label>maxX</label><input id="mrMaxX" type="number" value="43008"></div>
+    <div><label>maxY</label><input id="mrMaxY" type="number" value="30720"></div>
+  </div>
+</fieldset>
+
+<fieldset>
+  <legend>continent_rect  [[minX, minY], [maxX, maxY]]</legend>
+  <div class="row">
+    <div><label>minX</label><input id="crMinX" type="number" value="42624"></div>
+    <div><label>minY</label><input id="crMinY" type="number" value="28032"></div>
+  </div>
+  <div class="row">
+    <div><label>maxX</label><input id="crMaxX" type="number" value="46208"></div>
+    <div><label>maxY</label><input id="crMaxY" type="number" value="30464"></div>
+  </div>
+</fieldset>
+
+<h2>2. Wiki / world-map coordinate to convert</h2>
+<fieldset>
+  <legend>Wiki coordinate</legend>
+  <div class="row">
+    <div><label>wikiX</label><input id="wikiX" type="number" value="44826"></div>
+    <div><label>wikiY</label><input id="wikiY" type="number" value="30045"></div>
+  </div>
+</fieldset>
+
+<button onclick="convert()">Convert to in-game coordinates</button>
+
+<div class="result" id="output">Result will appear here. (Defaults pre-filled with Queensdale example — should give [9835, -17597].)</div>
+
+<script>
+function convert() {
+  const mr = [
+    [parseFloat(document.getElementById('mrMinX').value), parseFloat(document.getElementById('mrMinY').value)],
+    [parseFloat(document.getElementById('mrMaxX').value), parseFloat(document.getElementById('mrMaxY').value)]
+  ];
+  const cr = [
+    [parseFloat(document.getElementById('crMinX').value), parseFloat(document.getElementById('crMinY').value)],
+    [parseFloat(document.getElementById('crMaxX').value), parseFloat(document.getElementById('crMaxY').value)]
+  ];
+  const wikiX = parseFloat(document.getElementById('wikiX').value);
+  const wikiY = parseFloat(document.getElementById('wikiY').value);
+
+  const gameX = mr[0][0] + (wikiX - cr[0][0]) / (cr[1][0] - cr[0][0]) * (mr[1][0] - mr[0][0]);
+  const gameY = mr[1][1] - (wikiY - cr[0][1]) / (cr[1][1] - cr[0][1]) * (mr[1][1] - mr[0][1]);
+
+  document.getElementById('output').textContent =
+    "In-game coordinates:\n[ " + Math.round(gameX) + ", " + Math.round(gameY) + " ]\n\n" +
+    "(unrounded: " + gameX.toFixed(3) + ", " + gameY.toFixed(3) + ")";
+}
+</script>
+
+</body>
+</html>
