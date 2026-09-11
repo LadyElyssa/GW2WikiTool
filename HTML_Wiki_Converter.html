@@ -2,90 +2,125 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>GW2 Wiki → In-Game Coordinate Converter</title>
+<title>GW2 Coordinate Converter</title>
 <style>
-  body { font-family: -apple-system, Segoe UI, Roboto, sans-serif; max-width: 640px; margin: 40px auto; padding: 0 20px; color: #222; }
-  h1 { font-size: 1.4em; }
-  h2 { font-size: 1.05em; margin-top: 28px; }
-  fieldset { border: 1px solid #ccc; border-radius: 8px; padding: 14px 18px; margin-bottom: 18px; }
-  legend { font-weight: 600; padding: 0 6px; }
-  label { display: block; font-size: 0.85em; color: #555; margin-top: 8px; }
-  input { width: 100%; padding: 6px 8px; margin-top: 2px; box-sizing: border-box; font-size: 0.95em; }
-  .row { display: flex; gap: 12px; }
-  .row > div { flex: 1; }
-  button { margin-top: 16px; padding: 10px 18px; font-size: 1em; border-radius: 6px; border: none; background: #444; color: #fff; cursor: pointer; }
-  button:hover { background: #222; }
-  .result { margin-top: 16px; padding: 14px; background: #f4f4f4; border-radius: 8px; font-size: 1.05em; font-family: monospace; white-space: pre-wrap; }
-  .hint { font-size: 0.8em; color: #777; margin-top: 4px; }
-  a { color: #2a6fb0; }
+body{font-family:system-ui,sans-serif;max-width:600px;margin:40px auto;padding:0 20px;color:#222}
+h1{font-size:1.4em}.row{display:flex;gap:12px}.row>div{flex:1}
+fieldset{border:1px solid #ccc;border-radius:8px;padding:14px 18px;margin:14px 0}
+legend{font-weight:600}label{display:block;font-size:.85em;color:#555;margin-top:6px}
+input{width:100%;padding:7px;box-sizing:border-box}
+button{margin-top:12px;padding:9px 16px;border:0;border-radius:6px;background:#444;color:#fff;cursor:pointer}
+.result{margin-top:14px;padding:12px;background:#f4f4f4;border-radius:8px;font-family:monospace;white-space:pre-wrap}
+.hint{font-size:.82em;color:#777}#status{margin-top:10px;font-size:.85em}
 </style>
 </head>
 <body>
-
-<h1>GW2 Wiki Coordinate → In-Game Coordinate Converter</h1>
-<p>Converts a wiki/world-map ("continent") coordinate pair back into raw in-game coordinates, using a map's <code>map_rect</code> and <code>continent_rect</code> from the GW2 API.</p>
-
-<h2>1. Map rectangles</h2>
-<p class="hint">Look these up for your map via <a href="https://api.guildwars2.com/v2/continents/1/floors?ids=1" target="_blank">api.guildwars2.com/v2/continents/1/floors?ids=1</a> (continent 1 = Tyria, floor 1; use floor 2 for the End of Dragons–expanded areas). Find your map by name and copy its <code>map_rect</code> and <code>continent_rect</code> arrays.</p>
-
+<h1>GW2 Coordinate Converter</h1>
+<p class="hint">Enter a GW2 Map ID and then the Wiki Coords to convert from Wiki coordinates (inches) to GW2/Mumble coordinates (metres).</p>
 <fieldset>
-  <legend>map_rect  [[minX, minY], [maxX, maxY]]</legend>
-  <div class="row">
-    <div><label>minX</label><input id="mrMinX" type="number" value="-43008"></div>
-    <div><label>minY</label><input id="mrMinY" type="number" value="-27648"></div>
-  </div>
-  <div class="row">
-    <div><label>maxX</label><input id="mrMaxX" type="number" value="43008"></div>
-    <div><label>maxY</label><input id="mrMaxY" type="number" value="30720"></div>
-  </div>
+<legend>Wiki → GW2</legend>
+<div class="row">
+<div><label>Map ID</label><input id="mapId" type="number" min="1" step="1" value=""><button onclick="loadMap()">Load map</button></div>
+<div></div>
+</div>
+<div id="status">Loading map…</div>
+<br>
+<div class="row">
+<div><label>Wiki X</label><input id="wx" type="number" step="any" value=""></div>
+<div><label>Wiki Y</label><input id="wy" type="number" step="any" value=""></div>
+</div>
+<button onclick="wikiToGw2()">Convert</button>
+<div class="result" id="wout"></div>
 </fieldset>
 
 <fieldset>
-  <legend>continent_rect  [[minX, minY], [maxX, maxY]]</legend>
-  <div class="row">
-    <div><label>minX</label><input id="crMinX" type="number" value="42624"></div>
-    <div><label>minY</label><input id="crMinY" type="number" value="28032"></div>
-  </div>
-  <div class="row">
-    <div><label>maxX</label><input id="crMaxX" type="number" value="46208"></div>
-    <div><label>maxY</label><input id="crMaxY" type="number" value="30464"></div>
-  </div>
+<legend>GW2 → Wiki</legend>
+<div class="row">
+<div><label>GW2 X (m)</label><input id="gx" type="number" step="any" value=""></div>
+<div><label>GW2 Y (m)</label><input id="gy" type="number" step="any" value=""></div>
+</div>
+<button onclick="gw2ToWiki()">Convert</button>
+<div class="result" id="gout"></div>
 </fieldset>
-
-<h2>2. Wiki / world-map coordinate to convert</h2>
-<fieldset>
-  <legend>Wiki coordinate</legend>
-  <div class="row">
-    <div><label>wikiX</label><input id="wikiX" type="number" value="44826"></div>
-    <div><label>wikiY</label><input id="wikiY" type="number" value="30045"></div>
-  </div>
-</fieldset>
-
-<button onclick="convert()">Convert to in-game coordinates</button>
-
-<div class="result" id="output">Result will appear here. (Defaults pre-filled with Queensdale example — should give [9835, -17597].)</div>
 
 <script>
-function convert() {
-  const mr = [
-    [parseFloat(document.getElementById('mrMinX').value), parseFloat(document.getElementById('mrMinY').value)],
-    [parseFloat(document.getElementById('mrMaxX').value), parseFloat(document.getElementById('mrMaxY').value)]
-  ];
-  const cr = [
-    [parseFloat(document.getElementById('crMinX').value), parseFloat(document.getElementById('crMinY').value)],
-    [parseFloat(document.getElementById('crMaxX').value), parseFloat(document.getElementById('crMaxY').value)]
-  ];
-  const wikiX = parseFloat(document.getElementById('wikiX').value);
-  const wikiY = parseFloat(document.getElementById('wikiY').value);
+const M_TO_IN = 5000 / 127;
+let map = null;
 
-  const gameX = mr[0][0] + (wikiX - cr[0][0]) / (cr[1][0] - cr[0][0]) * (mr[1][0] - mr[0][0]);
-  const gameY = mr[1][1] - (wikiY - cr[0][1]) / (cr[1][1] - cr[0][1]) * (mr[1][1] - mr[0][1]);
+async function loadMap() {
+  const id = Number(document.getElementById('mapId').value);
+  const status = document.getElementById('status');
+  if (!Number.isInteger(id) || id < 1) {
+    status.textContent = 'Enter a valid Map ID.';
+    return;
+  }
 
-  document.getElementById('output').textContent =
-    "In-game coordinates:\n[ " + Math.round(gameX) + ", " + Math.round(gameY) + " ]\n\n" +
-    "(unrounded: " + gameX.toFixed(3) + ", " + gameY.toFixed(3) + ")";
+  status.textContent = 'Loading…';
+  map = null;
+
+  try {
+    const r = await fetch(`https://api.guildwars2.com/v2/maps/${id}`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+
+    if (!data.map_rect || !data.continent_rect) {
+      throw new Error('This map has no usable map_rect/continent_rect data.');
+    }
+
+    map = {
+      mapX0: data.map_rect[0][0],
+      mapY0: data.map_rect[0][1],
+      mapX1: data.map_rect[1][0],
+      mapY1: data.map_rect[1][1],
+      contX0: data.continent_rect[0][0],
+      contY0: data.continent_rect[0][1],
+      contX1: data.continent_rect[1][0],
+      contY1: data.continent_rect[1][1]
+    };
+
+    status.textContent = `${data.name} (Map ID ${id}) loaded.`;
+  } catch (e) {
+    status.textContent = `Unable to load map: ${e.message}`;
+  }
 }
-</script>
 
+function wikiToGw2() {
+  if (!map) return setOutput('wout', 'Load a map first.');
+
+  const x = Number(wx.value), y = Number(wy.value);
+  const ix = map.mapX0 +
+    (x - map.contX0) / (map.contX1 - map.contX0) *
+    (map.mapX1 - map.mapX0);
+
+  const iy = map.mapY1 -
+    (y - map.contY0) / (map.contY1 - map.contY0) *
+    (map.mapY1 - map.mapY0);
+
+  setOutput('wout', `[ ${ (ix / M_TO_IN).toFixed(2) }, ${ (iy / M_TO_IN).toFixed(2) } ]`);
+}
+
+function gw2ToWiki() {
+  if (!map) return setOutput('gout', 'Load a map first.');
+
+  const x = Number(gx.value) * M_TO_IN;
+  const y = Number(gy.value) * M_TO_IN;
+
+  const wx = map.contX0 +
+    (x - map.mapX0) / (map.mapX1 - map.mapX0) *
+    (map.contX1 - map.contX0);
+
+  const wy = map.contY0 +
+    (map.mapY1 - y) / (map.mapY1 - map.mapY0) *
+    (map.contY1 - map.contY0);
+
+  setOutput('gout', `[ ${wx.toFixed(2)}, ${wy.toFixed(2)} ]`);
+}
+
+function setOutput(id, text) {
+  document.getElementById(id).textContent = text;
+}
+
+loadMap();
+</script>
 </body>
 </html>
