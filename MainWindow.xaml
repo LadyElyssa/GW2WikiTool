@@ -324,7 +324,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock x:Name="StatusIcon" Grid.Column="0" Text="&#x25CF;" Foreground="#5CBB6A"
-                           FontSize="18 " VerticalAlignment="Center" Margin="0,-2,6,0"/>
+                           FontSize="20" VerticalAlignment="Center" Margin="0,-4,6,0"/>
                 <TextBlock x:Name="StatusText" Grid.Column="1" Text="Waiting for game..." Foreground="{StaticResource TextLight}"
                            FontSize="13" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
                 <TextBlock x:Name="LastUpdatedSeparator" Grid.Column="2" Text="   |   " Foreground="{StaticResource TextGray}"
@@ -333,13 +333,11 @@
                            FontSize="13" VerticalAlignment="Center" Visibility="Collapsed"/>
 
                 <Button x:Name="RetryButton" Grid.Column="4" Style="{StaticResource OrnateButtonStyle}"
-                        Margin="10,0,0,0" HorizontalAlignment="Right" Click="Retry_Click" 
-                        ToolTip="Retry fetching achievement/waypoint data"
-                        AutomationProperties.Name="Retry">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="&#x21BB;" Margin="0,-4,4,0" FontSize="22" VerticalAlignment="Center"/>
-                        <TextBlock Text="RETRY" VerticalAlignment="Center"/>
-                    </StackPanel>
+                        Margin="10,0,0,0" HorizontalAlignment="Right" Click="Retry_Click"
+                        Width="30" Visibility="Collapsed"
+                        AutomationProperties.Name="Retry or refresh achievement/waypoint data">
+                    <TextBlock x:Name="RetryIcon" Text="&#x21BB;" FontSize="22" Foreground="{StaticResource GoldLight}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Button>
             </Grid>
         </Grid>
