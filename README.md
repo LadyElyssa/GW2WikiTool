@@ -5,7 +5,9 @@
 * Cached and Searchable Waypoint Chat Codes.
 * The Waypoint Search just needs the name of the Waypoint, the term Waypoint is not needed.
 * The data cache is stored within the same folder that GW2WikiTool is launched from.
+<br>
 
-<img width="1008" height="460" alt="image" src="https://github.com/user-attachments/assets/894b0711-a80c-4029-94f0-ea9d3878a336" /><br>
+<img width="1008" height="446" alt="image" src="https://github.com/user-attachments/assets/821d96bd-ec1e-4271-81fc-6373d65f0287" />
+<br><br>
 
 **Inspired By**: [Chieftain Alex's GW2 Coordinate Reader](https://wiki.guildwars2.com/wiki/Guild_Wars_2_Wiki:Projects/NPC_Coordinates/Guide)
